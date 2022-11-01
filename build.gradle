@@ -8,4 +8,5 @@ plugins {
 //Global Depedencies
 ext {
     room_version = "2.4.3"
+    lifecycle_version = "2.5.1"
 }
