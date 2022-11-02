@@ -2,4 +2,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
     <dimen name="item_margim">8dp</dimen>
+    <dimen name="dialog_margin">16dp</dimen>
 </resources>
