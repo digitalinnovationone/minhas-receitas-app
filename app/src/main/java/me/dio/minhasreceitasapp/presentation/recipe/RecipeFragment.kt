@@ -4,17 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
 import me.dio.minhasreceitasapp.R
 import me.dio.minhasreceitasapp.databinding.FragmentFirstBinding
+import me.dio.minhasreceitasapp.presentation.recipe.adapter.RecipeAdapter
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class RecipeFragment : Fragment() {
 
+    private val viewModel: RecipesViewModel by viewModels {
+        RecipesViewModel.Factory()
+    }
+
     private lateinit var binding: FragmentFirstBinding
+    private val adapter by lazy { RecipeAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,19 +30,55 @@ class RecipeFragment : Fragment() {
     ): View {
         binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListeners()
+        setupAdapter()
+        observeStates()
+    }
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+    fun setupListeners() {
+        binding.fabRecipe.setOnClickListener {
+            //@TODO show dialog
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    fun setupAdapter() {
+        binding.rvRecipes.adapter = adapter
+    }
+
+    private fun observeStates() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                RecipeState.Loading -> {
+                    binding.pbLoading.isVisible = true
+
+                }
+                RecipeState.Empty -> {
+                    binding.pbLoading.isVisible = false
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.label_empty_recipes),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is RecipeState.Error -> {
+                    binding.pbLoading.isVisible = false
+                    Toast.makeText(
+                        requireContext(),
+                        state.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is RecipeState.Success -> {
+                    binding.pbLoading.isVisible = false
+                    adapter.submitList(state.recipe)
+                }
+            }
+
+
+        }
     }
 }
