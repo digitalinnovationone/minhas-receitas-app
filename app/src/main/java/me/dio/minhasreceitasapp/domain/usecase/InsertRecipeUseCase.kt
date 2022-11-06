@@ -1,4 +1,4 @@
-package me.dio.minhasreceitasapp.domain.usecase
+package me.dio.recipelist.domain.usecase
 
 import me.dio.minhasreceitasapp.domain.model.RecipeDomain
 import me.dio.minhasreceitasapp.domain.repository.RecipeRepository

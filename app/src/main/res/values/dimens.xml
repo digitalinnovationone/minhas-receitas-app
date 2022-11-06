@@ -1,6 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="card_elevation">8dp</dimen>
-    <dimen name="item_margim">8dp</dimen>
+    <dimen name="item_margin">8dp</dimen>
+    <dimen name="margin_card">8dp</dimen>
+    <dimen name="card_elevation">0dp</dimen>
+    <dimen name="stroke_width">1dp</dimen>
+    <dimen name="card_corne_radius">16dp</dimen>
     <dimen name="dialog_margin">16dp</dimen>
 </resources>

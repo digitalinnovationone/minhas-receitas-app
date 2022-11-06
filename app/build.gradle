@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -51,7 +52,7 @@ dependencies {
     kapt "androidx.room:room-compiler:${ext.room_version}"
 
     //ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${ext.lifecycle_version}"
+    implementation "androidx.room:room-ktx:${ext.room_version}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${ext.lifecycle_version}"
 
     testImplementation 'junit:junit:4.13.2'

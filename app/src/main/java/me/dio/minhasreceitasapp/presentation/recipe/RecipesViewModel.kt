@@ -1,38 +1,48 @@
 package me.dio.minhasreceitasapp.presentation.recipe
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import me.dio.minhasreceitasapp.data.db
 import me.dio.minhasreceitasapp.data.repository.RecipeRepositoryImpl
 import me.dio.minhasreceitasapp.domain.model.RecipeDomain
 import me.dio.minhasreceitasapp.domain.usecase.GetAllRecipesUseCase
-import me.dio.minhasreceitasapp.domain.usecase.InsertRecipeUseCase
+import me.dio.recipelist.domain.usecase.InsertRecipeUseCase
 
 class RecipesViewModel(
     private val getAllRecipesUseCase: GetAllRecipesUseCase,
     private val insertRecipeUseCase: InsertRecipeUseCase
 ) : ViewModel() {
 
-    val state: LiveData<RecipeState> = liveData {
-        emit(RecipeState.Loading)
-        val state = try {
-            val recipes = getAllRecipesUseCase()
-            if (recipes.isEmpty()) {
-                RecipeState.Empty
-            } else {
-                RecipeState.Success(recipes)
+    private val _state = MutableSharedFlow<RecipesState>()
+    val state: SharedFlow<RecipesState> = _state
+
+    init {
+        getAllRecipes()
+    }
+    
+    private fun getAllRecipes() = viewModelScope.launch {
+        getAllRecipesUseCase()
+            .flowOn(Dispatchers.Main)
+            .onStart {
+                _state.emit(RecipesState.Loading)
+            }.catch {
+                _state.emit(RecipesState.Error("erro"))
+            }.collect { recipes ->
+                if (recipes.isEmpty()) {
+                    _state.emit(RecipesState.Empty)
+                } else {
+                    _state.emit(RecipesState.Success(recipes))
+                }
             }
-        } catch (exception: Exception) {
-            Log.e("Error", exception.message.toString())
-            RecipeState.Error(exception.message.toString())
-        }
-        emit(state)
     }
 
     fun insert(name: String) = viewModelScope.launch {

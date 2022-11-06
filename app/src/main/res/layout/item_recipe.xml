@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:layout_margin="@dimen/item_margim"
+    android:layout_margin="@dimen/item_margin"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="@dimen/card_elevation">
+    app:cardCornerRadius="@dimen/card_corne_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:strokeColor="@color/black"
+    app:strokeWidth="@dimen/stroke_width">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_content"
@@ -24,7 +27,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Bolo de fubá" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>

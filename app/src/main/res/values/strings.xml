@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Minhas Receitas App</string>
+    <string name="app_name">Minhas Receitas</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -9,9 +9,18 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="label_empty_recipes">Ops, não temos nenhuma receita</string>
-
+    <string name="label_add_recipe">Adicionar receita</string>
+    <string name="label_edit_text">Nome da lista</string>
+    <string name="label_cancel">Cancelar</string>
+    <string name="label_confirm">Confirmar</string>
     <string name="label_name_recipe">Nome da receita</string>
+    <string name="label_item_description">Descrição do item</string>
 
     <string name="title_new_recipe">Nova Receita</string>
+    <string name="label_ingredients">Ingredientes</string>
+    <string name="label_prepare_mode">Modo de preparo</string>
+
+    <string name="label_new_ingredient">Novo ingrediente</string>
+    <string name="label_new_prepare_mode">Novo modo de preparo</string>
+
 </resources>
