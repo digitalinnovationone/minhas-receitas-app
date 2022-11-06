@@ -28,7 +28,7 @@ class RecipesViewModel(
     init {
         getAllRecipes()
     }
-    
+
     private fun getAllRecipes() = viewModelScope.launch {
         getAllRecipesUseCase()
             .flowOn(Dispatchers.Main)
@@ -46,7 +46,7 @@ class RecipesViewModel(
     }
 
     fun insert(name: String) = viewModelScope.launch {
-        insertRecipeUseCase(RecipeDomain(name = name))
+        insertRecipeUseCase(RecipeDomain(name = name, prepareTime = "45 min"))
     }
 
     class Factory : ViewModelProvider.Factory {
