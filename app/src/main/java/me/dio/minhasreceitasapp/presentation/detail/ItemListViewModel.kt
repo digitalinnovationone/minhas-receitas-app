@@ -13,16 +13,25 @@ import me.dio.minhasreceitasapp.data.db
 import me.dio.minhasreceitasapp.data.repository.RecipeRepositoryImpl
 import me.dio.minhasreceitasapp.domain.model.IngredientDomain
 import me.dio.minhasreceitasapp.domain.model.PrepareModeDomain
+import me.dio.minhasreceitasapp.domain.usecase.DeleteIngredientsUseCase
+import me.dio.minhasreceitasapp.domain.usecase.DeletePrepareModeUseCase
 import me.dio.minhasreceitasapp.domain.usecase.GetRecipeWithIngredientsAndPrepareModeUseCase
 import me.dio.minhasreceitasapp.domain.usecase.InsertIngredientsUseCase
 import me.dio.minhasreceitasapp.domain.usecase.InsertPrepareModeUseCase
+import me.dio.minhasreceitasapp.domain.usecase.UpdateIngredientsUseCase
+import me.dio.minhasreceitasapp.domain.usecase.UpdatePrepareModeUseCase
 import me.dio.minhasreceitasapp.presentation.mapper.toModelIngredient
 import me.dio.minhasreceitasapp.presentation.mapper.toModelPrepareMode
+import me.dio.minhasreceitasapp.presentation.model.ItemListModel
 
 class ItemListViewModel(
     private val getRecipeWithIngredientsAndPrepareModeUseCase: GetRecipeWithIngredientsAndPrepareModeUseCase,
     private val insertIngredientsUseCase: InsertIngredientsUseCase,
-    private val insertPrepareModeUseCase: InsertPrepareModeUseCase
+    private val insertPrepareModeUseCase: InsertPrepareModeUseCase,
+    private val updateIngredientsUseCase: UpdateIngredientsUseCase,
+    private val updatePrepareModeUseCase: UpdatePrepareModeUseCase,
+    private val deleteIngredientUseCase: DeleteIngredientsUseCase,
+    private val deletePrepareModeUseCase: DeletePrepareModeUseCase,
 ) : ViewModel() {
 
     fun getRecipeWithIngredientsAndPrepareMode(idRecipe: Int): LiveData<ItemListState> = liveData {
@@ -62,20 +71,53 @@ class ItemListViewModel(
         }
     }
 
-    fun updateIngredient() {
-        //@TODO realizar o update do ingredient
+    fun updateIngredientsOrPrepareMode(
+        itemList: ItemListModel,
+        typeInsert: String,
+        name: String,
+        idRecipe: Int
+    ) = viewModelScope.launch {
+        if (typeInsert == "UPDATE_INGREDIENT") {
+            updateIngredientsUseCase(
+                IngredientDomain(
+                    id = itemList.id,
+                    idRecipe = idRecipe,
+                    name = name,
+                )
+            )
+        } else {
+            updatePrepareModeUseCase(
+                PrepareModeDomain(
+                    id = itemList.id,
+                    name = name,
+                    idRecipe = idRecipe
+                )
+            )
+        }
     }
-
-    fun removeIngredient() {
-        //@TODO realizar a exclusao do ingredient
-    }
-
-    fun updatePrepareMode() {
-        //@TODO realizar o update do modo de preparo
-    }
-
-    fun removePrepareMode() {
-        //@TODO realizar o update do modo de preparo
+    fun removeIngredientOrPrepareMode(
+        typeInsert: String,
+        name: String,
+        id: Int,
+        idRecipe: Int
+    ) = viewModelScope.launch {
+        if (typeInsert == "REMOVE_INGREDIENT") {
+            deleteIngredientUseCase(
+                IngredientDomain(
+                    id = id,
+                    name = name,
+                    idRecipe = idRecipe
+                )
+            )
+        } else {
+            deletePrepareModeUseCase(
+                PrepareModeDomain(
+                    id = id,
+                    name = name,
+                    idRecipe = idRecipe
+                )
+            )
+        }
     }
 
     class Factory : ViewModelProvider.Factory {
@@ -91,7 +133,11 @@ class ItemListViewModel(
                     repository
                 ),
                 insertIngredientsUseCase = InsertIngredientsUseCase(repository),
-                insertPrepareModeUseCase = InsertPrepareModeUseCase(repository)
+                insertPrepareModeUseCase = InsertPrepareModeUseCase(repository),
+                updateIngredientsUseCase = UpdateIngredientsUseCase(repository),
+                updatePrepareModeUseCase = UpdatePrepareModeUseCase(repository),
+                deleteIngredientUseCase = DeleteIngredientsUseCase(repository),
+                deletePrepareModeUseCase = DeletePrepareModeUseCase(repository)
             ) as T
         }
     }

@@ -1,6 +1,7 @@
 package me.dio.recipelist.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -9,15 +10,15 @@ import kotlinx.coroutines.flow.Flow
 import me.dio.minhasreceitasapp.data.entity.FullRecipeEntity
 import me.dio.minhasreceitasapp.data.entity.Ingredient
 import me.dio.minhasreceitasapp.data.entity.PrepareMode
-import me.dio.minhasreceitasapp.data.entity.Recipe
+import me.dio.minhasreceitasapp.data.entity.RecipeEntity
 
 @Dao
 interface RecipeDao {
     @Query("SELECT * FROM recipe")
-    fun getAll(): Flow<List<Recipe>>
+    fun getAll(): Flow<List<RecipeEntity>>
 
     @Insert
-    fun insert(recipe: Recipe)
+    fun insert(recipe: RecipeEntity)
 
     @Insert
     fun insert(ingredient: Ingredient)
@@ -31,7 +32,11 @@ interface RecipeDao {
 
     @Update
     fun updateIngredient(ingredient: Ingredient)
+    @Delete
+    fun deleteIngredient(ingredient: Ingredient)
 
     @Update
     fun updatePrepareMode(prepareMode: PrepareMode)
+    @Delete
+    fun deletePrepareMode(prepareMode: PrepareMode)
 }
