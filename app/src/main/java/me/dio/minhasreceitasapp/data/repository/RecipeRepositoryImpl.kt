@@ -51,8 +51,16 @@ class RecipeRepositoryImpl(private val dao: RecipeDao) : RecipeRepository {
             dao.updateIngredient(ingredient.toEntity())
         }
 
+    override suspend fun deleteIngredient(ingredient: IngredientDomain) =
+        withContext(Dispatchers.IO) {
+            dao.deleteIngredient(ingredient.toEntity())
+        }
     override suspend fun updatePrepareMode(prepareMode: PrepareModeDomain) =
         withContext(Dispatchers.IO) {
             dao.updatePrepareMode(prepareMode.toEntity())
+        }
+    override suspend fun deletePrepareMode(prepareMode: PrepareModeDomain) =
+        withContext(Dispatchers.IO) {
+            dao.deletePrepareMode(prepareMode.toEntity())
         }
 }

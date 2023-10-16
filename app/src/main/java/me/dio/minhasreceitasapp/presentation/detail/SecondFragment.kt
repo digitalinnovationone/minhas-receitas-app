@@ -1,6 +1,7 @@
 package me.dio.minhasreceitasapp.presentation.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import me.dio.minhasreceitasapp.R
 import me.dio.minhasreceitasapp.databinding.FragmentSecondBinding
 import me.dio.minhasreceitasapp.presentation.detail.adapter.ItemListAdapter
 import me.dio.minhasreceitasapp.presentation.dialog.DialogEditTextFragment
+import me.dio.minhasreceitasapp.presentation.model.ItemListModel
 
 class SecondFragment : Fragment() {
 
@@ -28,6 +30,7 @@ class SecondFragment : Fragment() {
     private val adapterPrepareMode by lazy { ItemListAdapter() }
 
     private var typeInsert = ""
+    private var itemList: ItemListModel = ItemListModel(id=0, name = "")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,25 +57,47 @@ class SecondFragment : Fragment() {
 
         setFragmentResultListener(DialogEditTextFragment.FRAGMENT_RESULT) { requestKey, bundle ->
             val name = bundle.getString(DialogEditTextFragment.EDIT_TEXT_VALUE) ?: ""
-            viewModel.insertIngredientsOrPrepareMode(
-                typeInsert = typeInsert,
-                name = name,
-                idRecipe = args.idRecipe
-            )
+            if (typeInsert == "INGREDIENT" || typeInsert == "PREPARE_MODE") {
+                viewModel.insertIngredientsOrPrepareMode(
+                    typeInsert = typeInsert,
+                    name = name,
+                    idRecipe = args.idRecipe
+                )
+            } else {
+                viewModel.updateIngredientsOrPrepareMode(
+                    itemList = itemList,
+                    typeInsert = typeInsert,
+                    name = name,
+                    idRecipe = args.idRecipe
+                )
+            }
         }
         adapterIngredients.edit = {
-            //@TODO implementar a chamada pelo aluno
+            showDialogUpdateIngredient()
+            itemList = it
         }
         adapterIngredients.remove = {
-            //@TODO implementar a chamada pelo aluno
+            viewModel.removeIngredientOrPrepareMode(
+                typeInsert = "REMOVE_INGREDIENT",
+                name = it.name,
+                id = it.id,
+                idRecipe = args.idRecipe
+            )
+            Log.d("ABUU", "ABUU: $it")
         }
 
         adapterPrepareMode.edit = {
-            //@TODO implementar a chamada pelo aluno
+            showDialogUpdatePrepareMode()
+            itemList = it
         }
 
         adapterPrepareMode.remove = {
-            //@TODO implementar a chamada pelo aluno
+            viewModel.removeIngredientOrPrepareMode(
+                typeInsert = "REMOVE_PREPARE_MODE",
+                name = it.name,
+                id = it.id,
+                idRecipe = args.idRecipe
+            )
         }
     }
 
@@ -109,10 +134,28 @@ class SecondFragment : Fragment() {
         )
     }
 
+    private fun showDialogUpdateIngredient() {
+        typeInsert = "UPDATE_INGREDIENT"
+        DialogEditTextFragment.show(
+            title = getString(R.string.label_update_ingredient),
+            placeHolderText = getString(R.string.label_item_description),
+            fragmentManager = parentFragmentManager
+        )
+    }
+
     private fun showDialogNewPrepareMode() {
         typeInsert = "PREPARE_MODE"
         DialogEditTextFragment.show(
             title = getString(R.string.label_new_prepare_mode),
+            placeHolderText = getString(R.string.label_item_description),
+            fragmentManager = parentFragmentManager
+        )
+    }
+
+    private fun showDialogUpdatePrepareMode() {
+        typeInsert = "UPDATE_PREPARE_MODE"
+        DialogEditTextFragment.show(
+            title = getString(R.string.label_update_prepare_mode),
             placeHolderText = getString(R.string.label_item_description),
             fragmentManager = parentFragmentManager
         )

@@ -21,6 +21,8 @@
     <string name="label_prepare_mode">Modo de preparo</string>
 
     <string name="label_new_ingredient">Novo ingrediente</string>
+    <string name="label_update_ingredient">Atualizar ingrediente</string>
     <string name="label_new_prepare_mode">Novo modo de preparo</string>
+    <string name="label_update_prepare_mode">Atualizar modo de preparo</string>
 
 </resources>
